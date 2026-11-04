@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}EduManage{% endblock %} | EduManage</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if session.get('user_id') %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">E</span><span>Edu<span class="brand-light">Manage</span><small>STUDENT PORTAL</small></span></a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav>
+      <a class="{{ 'active' if request.endpoint=='dashboard' else '' }}" href="{{ url_for('dashboard') }}">▦ <span>Dashboard</span></a>
+      <a class="{{ 'active' if request.endpoint=='students' else '' }}" href="{{ url_for('students') }}">♙ <span>Students</span></a>
+      <a class="{{ 'active' if request.endpoint=='courses' else '' }}" href="{{ url_for('courses') }}">▤ <span>Courses</span></a>
+      <a class="{{ 'active' if request.endpoint=='attendance' else '' }}" href="{{ url_for('attendance') }}">◷ <span>Attendance</span></a>
+      <a class="{{ 'active' if request.endpoint=='marks' else '' }}" href="{{ url_for('marks') }}">▧ <span>Marks & Results</span></a>
+    </nav>
+    <div class="sidebar-bottom"><div class="avatar">{{ session.get('username','A')[0]|upper }}</div><div class="user-info"><b>{{ session.get('username','Admin') }}</b><small>Administrator</small></div><a class="logout" href="{{ url_for('logout') }}" title="Log out">↗</a></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><span class="eyebrow">EDUMANAGE / ADMIN</span><h1>{% block page_heading %}Dashboard{% endblock %}</h1></div><div class="top-right"><span class="live-dot"></span><span>System online</span><div class="top-avatar">A</div></div></header>
+    <section class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category,message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+      <footer>© {{ 2026 }} EduManage · Student Management System</footer>
+    </section>
+  </main>
+</div>
+{% else %}
+{% block auth_content %}{% endblock %}
+{% endif %}
+</body></html>

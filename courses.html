@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Courses{% endblock %}{% block page_heading %}Courses{% endblock %}
+{% block content %}
+<div class="section-heading"><div><h3>Course management</h3><p>Create and maintain the courses offered by your institution.</p></div></div>
+<div class="panel"><h3>{{ 'Edit course' if edit_course else 'Add a course' }}</h3><form method="post" class="form-grid">
+<input type="hidden" name="action" value="{{ 'edit' if edit_course else 'add' }}">
+{% if edit_course %}<input type="hidden" name="id" value="{{ edit_course.id }}">{% endif %}
+<label>Course name *<input name="name" value="{{ edit_course.name if edit_course else '' }}" placeholder="Computer Science" required></label>
+<label>Course code *<input name="code" value="{{ edit_course.code if edit_course else '' }}" placeholder="CSE" required></label>
+<label>Duration<input name="duration" value="{{ edit_course.duration if edit_course else '' }}" placeholder="3 years"></label>
+<label>Description<input name="description" value="{{ edit_course.description if edit_course else '' }}" placeholder="Short course description"></label>
+<div class="form-action"><button class="btn primary">{{ 'Save changes' if edit_course else '＋ Add course' }}</button>{% if edit_course %}<a class="btn outline" href="{{ url_for('courses') }}">Cancel</a>{% endif %}</div>
+</form></div>
+<div class="section-heading compact"><div><h3>Available courses <span class="count-pill">{{ courses|length }}</span></h3></div></div>
+<div class="course-grid">{% for c in courses %}<div class="course-card"><div class="course-symbol">▤</div><div><h3>{{ c.name }}</h3><span class="course-code">{{ c.code }} · {{ c.duration or 'Duration not set' }}</span></div><div class="course-bottom"><span>{{ c.student_count }} students enrolled</span><div><a class="text-edit" href="{{ url_for('courses', edit=c.id) }}">Edit</a><form method="post" onsubmit="return confirm('Delete this course?')"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="{{ c.id }}"><button class="text-danger">Delete</button></form></div></div>{% else %}<p class="empty">No courses added yet.</p>{% endfor %}</div>
+{% endblock %}

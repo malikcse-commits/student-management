@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Attendance{% endblock %}{% block page_heading %}Attendance{% endblock %}
+{% block content %}
+<div class="section-heading"><div><h3>Daily attendance</h3><p>Choose a date and save each student's attendance status.</p></div><form method="get" class="date-form"><input type="date" name="attendance_date" value="{{ selected_date }}"><button class="btn dark">Show date</button></form></div>
+<div class="table-wrap"><table><thead><tr><th>ROLL NO.</th><th>STUDENT</th><th>COURSE</th><th>CURRENT STATUS</th><th>UPDATE ATTENDANCE</th></tr></thead><tbody>
+{% for s in students %}<tr><td>{{ s.roll_no }}</td><td><b>{{ s.name }}</b></td><td>{{ s.course_name or '—' }}</td><td>{% if s.status %}<span class="status {{ s.status|lower }}">{{ s.status }}</span>{% else %}<span class="muted">Not marked</span>{% endif %}</td><td><form method="post" class="attendance-form"><input type="hidden" name="student_id" value="{{ s.id }}"><input type="hidden" name="attendance_date" value="{{ selected_date }}"><select name="status"><option value="Present">Present</option><option value="Absent">Absent</option><option value="Late">Late</option></select><button class="btn small primary">Save</button></form></td></tr>{% else %}<tr><td colspan="5" class="empty">Add students before taking attendance.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

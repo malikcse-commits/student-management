@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block title %}Marks & Results{% endblock %}{% block page_heading %}Marks & Results{% endblock %}
+{% block content %}
+<div class="section-heading"><div><h3>Academic performance</h3><p>Record examination marks and review student results.</p></div></div>
+<div class="panel"><h3>Add marks record</h3><form method="post" class="form-grid">
+<input type="hidden" name="action" value="add">
+<label>Student *<select name="student_id" required><option value="">Select student</option>{% for s in students %}<option value="{{ s.id }}">{{ s.roll_no }} — {{ s.name }}</option>{% endfor %}</select></label>
+<label>Subject *<input name="subject" placeholder="Mathematics" required></label>
+<label>Exam name *<input name="exam_name" placeholder="Mid-term" required></label>
+<label>Marks obtained *<input type="number" name="marks_obtained" min="0" step="0.5" required></label>
+<label>Total marks *<input type="number" name="total_marks" min="0.5" step="0.5" required></label>
+<label>Exam date<input type="date" name="exam_date"></label>
+<div class="form-action"><button class="btn primary">＋ Save marks</button></div>
+</form></div>
+<div class="section-heading compact"><div><h3>Marks records <span class="count-pill">{{ marks|length }}</span></h3></div></div>
+<div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>SUBJECT</th><th>EXAM</th><th>MARKS</th><th>PERCENTAGE</th><th>DATE</th><th>ACTION</th></tr></thead><tbody>
+{% for m in marks %}<tr><td><b>{{ m.student_name }}</b><small class="table-sub">{{ m.roll_no }}</small></td><td>{{ m.subject }}</td><td>{{ m.exam_name }}</td><td>{{ "%.1f"|format(m.marks_obtained) }} / {{ "%.1f"|format(m.total_marks) }}</td><td>{{ ((m.marks_obtained / m.total_marks) * 100)|round(1) }}%</td><td>{{ m.exam_date or '—' }}</td><td><form method="post" onsubmit="return confirm('Delete this marks record?')"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="{{ m.id }}"><button class="text-danger">Delete</button></form></td></tr>{% else %}<tr><td colspan="7" class="empty">No marks recorded yet.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

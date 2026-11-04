@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_heading %}Dashboard{% endblock %}
+{% block content %}
+<div class="welcome-row"><div><h2>Good day, {{ session.get('username','Admin') }} 👋</h2><p>Here’s what’s happening at your institution today.</p></div><div class="date-chip">▣ &nbsp; {{ today }}</div></div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-top"><span>Total students</span><span class="stat-icon purple">♙</span></div><div class="stat-number">{{ stats.students }}</div><div class="stat-foot">Registered student records</div></div>
+  <div class="stat-card"><div class="stat-top"><span>Total courses</span><span class="stat-icon blue">▤</span></div><div class="stat-number">{{ stats.courses }}</div><div class="stat-foot">Available courses</div></div>
+  <div class="stat-card"><div class="stat-top"><span>Present today</span><span class="stat-icon green">✓</span></div><div class="stat-number">{{ stats.present }}</div><div class="stat-foot">Marked present</div></div>
+  <div class="stat-card"><div class="stat-top"><span>Absent today</span><span class="stat-icon orange">–</span></div><div class="stat-number">{{ stats.absent }}</div><div class="stat-foot">Marked absent</div></div>
+</div>
+<div class="stats-grid secondary-stats">
+  <div class="mini-stat"><span>Late today</span><b>{{ stats.late }}</b></div>
+  <div class="mini-stat"><span>Attendance rate today</span><b>{{ stats.attendance_pct }}%</b></div>
+  <div class="mini-stat"><span>Marks records</span><b>{{ stats.marks }}</b></div>
+</div>
+<div class="section-heading"><div><h3>Recently added students</h3><p>Latest student registrations in the system</p></div><a class="btn outline" href="{{ url_for('students') }}">View all students →</a></div>
+<div class="table-wrap"><table><thead><tr><th>STUDENT</th><th>ROLL NUMBER</th><th>COURSE</th><th>YEAR</th><th>JOINED ON</th></tr></thead><tbody>
+{% for s in recent %}<tr><td><div class="person"><span class="person-avatar">{{ s.name[0]|upper }}</span><b>{{ s.name }}</b></div></td><td>{{ s.roll_no }}</td><td>{{ s.course_name or 'Not assigned' }}</td><td>{{ s.year }}</td><td>{{ s.joined_on or '—' }}</td></tr>{% else %}<tr><td colspan="5" class="empty">No students yet. Add your first student to get started.</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="quick-links"><a href="{{ url_for('students') }}">＋ Add a student</a><a href="{{ url_for('attendance') }}">✓ Take attendance</a><a href="{{ url_for('marks') }}">▧ Add marks</a></div>
+{% endblock %}
